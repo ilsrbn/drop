@@ -14,7 +14,7 @@ const { user } = defineProps<{ user: User | null }>()
 defineDropState({ user })
 </script>
 
-<script drop lang="ts">
+<drop lang="ts">
 import { session } from "~~/shared/drop/session"
 
 const { root, state, onCleanup } = useDropContext<{ user: User | null }>()
@@ -42,7 +42,7 @@ onCleanup(() => {
   controller.abort()
   unsubscribe()
 })
-</script>
+</drop>
 
 <style scoped>
 .header { display: flex; justify-content: space-between; gap: 1rem; padding: 1rem; }

@@ -12,7 +12,7 @@
 defineDropState({})
 </script>
 
-<script drop lang="ts">
+<drop lang="ts">
 import { session } from "~~/shared/drop/session"
 
 const { root, onCleanup } = useDropContext()
@@ -36,4 +36,4 @@ form.addEventListener('submit', async (event) => {
 })
 
 onCleanup(() => document.removeEventListener('drop:login-request', open))
-</script>
+</drop>

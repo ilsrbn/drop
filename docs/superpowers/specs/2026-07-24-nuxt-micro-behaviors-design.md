@@ -41,7 +41,7 @@ const { user } = defineProps<{ user: User | null }>()
 defineDropState({ user })
 </script>
 
-<script drop lang="ts">
+<drop lang="ts">
 import { ref, watchEffect } from "#drop/reactivity"
 import { session } from "~/shared/drop/session"
 
@@ -56,10 +56,10 @@ onCleanup(() => {
   unsubscribe()
   stop()
 })
-</script>
+</drop>
 ```
 
-`<script drop lang="ts">` is a Drop script transformed into a mount function and
+`<drop lang="ts">` is a Vue custom block transformed into a mount function and
 runs once for each SSR instance of the component. Its top-level syntax is kept
 compact and composition-oriented, but it is not Vue component setup running in
 a browser.
@@ -69,7 +69,7 @@ events are registered by Drop code.
 ## Server-to-browser data boundary
 
 `defineDropState()` is a compiler macro allowed only in a component with a
-`<script drop>` block. It selects a JSON-serializable SSR snapshot for the
+`<drop>` block. It selects a JSON-serializable SSR snapshot for the
 associated component instance.
 
 It permits values prepared in normal server setup, including values from
@@ -83,11 +83,11 @@ produce build-time diagnostics rather than silently degrading data.
 
 ## Build and runtime model
 
-For a `.vue` file with a Drop script, the module produces two independent
+For a `.vue` file with a Drop block, the module produces two independent
 artifacts:
 
 1. The normal Vue SFC template, server setup, and styles remain SSR artifacts.
-2. The Drop script and browser-safe imports become a hashed ESM entry.
+2. The custom Drop block and browser-safe imports become a hashed ESM entry.
 
 SSR adds a stable marker and JSON-safe serialized state as attributes on the
 component's one real HTML root. The ESM entry finds all matching markers and
@@ -123,9 +123,9 @@ updates its own DOM.
 
 The module fails with actionable diagnostics for:
 
-- multiple Drop scripts, missing template, invalid Drop root, or an invalid
+- multiple Drop blocks, missing template, invalid Drop root, or an invalid
   state snapshot;
-- `defineDropState` used without a Drop script;
+- `defineDropState` used without a Drop block;
 - a Drop-enabled component rendered on a route without `noScripts: true`;
 - direct Drop imports of `vue`, `#app`, `#imports`, or `nuxt/*`.
 
@@ -137,7 +137,7 @@ import.
 
 Tests cover:
 
-1. SFC parsing and diagnostics for Drop scripts, root shape, forbidden imports,
+1. SFC parsing and diagnostics for custom blocks, root shape, forbidden imports,
    and serialization.
 2. A production build where a static route has no Nuxt payload or client entry,
    but does include the used Drop asset; unused Drop entries do not load.

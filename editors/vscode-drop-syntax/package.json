@@ -1,0 +1,27 @@
+{
+  "name": "drop-vscode-syntax",
+  "displayName": "Drop Syntax",
+  "description": "TypeScript syntax highlighting for Drop blocks in Vue SFCs.",
+  "version": "0.1.0",
+  "publisher": "drop",
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": [
+    "Programming Languages"
+  ],
+  "contributes": {
+    "grammars": [
+      {
+        "scopeName": "drop.injection",
+        "path": "./syntaxes/drop.tmLanguage.json",
+        "injectTo": [
+          "text.html.vue"
+        ],
+        "embeddedLanguages": {
+          "meta.embedded.block.drop.ts": "typescript"
+        }
+      }
+    ]
+  }
+}

@@ -1,0 +1,38 @@
+{
+  "scopeName": "drop.injection",
+  "injectionSelector": "L:text.html.vue",
+  "patterns": [
+    {
+      "name": "meta.embedded.block.drop.ts",
+      "begin": "(<)(drop)(?=\\s|>)(?:\\s+[^>]*?)?(>)",
+      "beginCaptures": {
+        "1": {
+          "name": "punctuation.definition.tag.begin.html"
+        },
+        "2": {
+          "name": "entity.name.tag.drop"
+        },
+        "3": {
+          "name": "punctuation.definition.tag.end.html"
+        }
+      },
+      "end": "(</)(drop)(>)",
+      "endCaptures": {
+        "1": {
+          "name": "punctuation.definition.tag.begin.html"
+        },
+        "2": {
+          "name": "entity.name.tag.drop"
+        },
+        "3": {
+          "name": "punctuation.definition.tag.end.html"
+        }
+      },
+      "patterns": [
+        {
+          "include": "source.ts"
+        }
+      ]
+    }
+  ]
+}

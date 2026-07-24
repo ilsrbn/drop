@@ -33,12 +33,6 @@ export default defineNuxtModule<ModuleOptions>({
       getContents: () => `
 declare global {
   function defineDropState(state: Record<string, unknown>): void
-
-  function useDropContext<TState extends Record<string, unknown> = Record<string, unknown>>(): {
-    root: HTMLElement
-    state: TState
-    onCleanup(cleanup: () => void): void
-  }
 }
 
 export {}

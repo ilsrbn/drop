@@ -8,7 +8,7 @@ const user = null
 defineDropState({ user })
 </script>
 
-<script drop lang="ts">
+<drop lang="ts">
 const { root } = useDropContext()
 root.dataset.ready = 'true'
-</script>
+</drop>

@@ -4,15 +4,15 @@ import { transformDropSfc } from '../../src/build/drop-vite-plugin'
 const source = `
 <template><header>Drop</header></template>
 <script setup lang="ts">defineDropState({ user: null })</script>
-<script drop lang="ts">const { root } = useDropContext()</script>
+<drop lang="ts">const { root } = useDropContext()</drop>
 `
 
 describe('Drop Vite transform', () => {
-  it('removes a Drop script before Vue compiles the SFC', () => {
+  it('removes a Drop block before Vue compiles the SFC', () => {
     const result = transformDropSfc(source, '/app/components/UserHeader.vue')
 
     expect(result).toMatchObject({
-      code: expect.not.stringContaining('<script drop'),
+      code: expect.not.stringContaining('<drop'),
     })
   })
 
