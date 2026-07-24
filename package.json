@@ -1,8 +1,8 @@
 {
-  "name": "nuxt-micro-behaviors",
+  "name": "drop",
   "version": "1.0.0",
-  "description": "Opt-in browser micro behaviors for static Nuxt routes",
-  "repository": "ilsrbn/nuxt-micro-behaviors",
+  "description": "Opt-in browser behaviors for static Nuxt routes",
+  "repository": "ilsrbn/drop",
   "license": "MIT",
   "type": "module",
   "exports": {

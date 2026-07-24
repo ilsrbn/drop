@@ -6,8 +6,8 @@ export interface ModuleOptions {
 
 export default defineNuxtModule<ModuleOptions>({
   meta: {
-    name: 'nuxt-micro-behaviors',
-    configKey: 'microBehaviors',
+    name: 'drop',
+    configKey: 'drop',
   },
   defaults: {
     enabled: true,

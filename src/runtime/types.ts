@@ -1,10 +1,10 @@
-export type MicroSnapshot = Record<string, unknown>
+export type DropSnapshot = Record<string, unknown>
 
-export interface MicroContext<TState extends MicroSnapshot = MicroSnapshot> {
+export interface DropContext<TState extends DropSnapshot = DropSnapshot> {
   root: HTMLElement
   state: TState
   onCleanup(cleanup: () => void): void
 }
 
-export type MicroBehavior<TState extends MicroSnapshot = MicroSnapshot> =
-  (context: MicroContext<TState>) => void | (() => void)
+export type DropBehavior<TState extends DropSnapshot = DropSnapshot> =
+  (context: DropContext<TState>) => void | (() => void)
