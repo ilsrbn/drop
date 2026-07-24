@@ -64,7 +64,9 @@ export function parseDropDocument(source: string, filename: string): ParsedDropD
       if (close < 0) diagnostics.push(diagnostic('Unterminated <drop> block', opening.index, Math.min(source.length, opening.index + opening[0].length)))
     }
   }
-  if (blocks.length > 1) diagnostics.push(diagnostic('A component can contain only one <drop> block', blocks[1].loc.start.offset, blocks[blocks.length - 1].loc.end.offset))
+  const firstDuplicate = blocks[1]
+  const lastBlock = blocks[blocks.length - 1]
+  if (firstDuplicate && lastBlock) diagnostics.push(diagnostic('A component can contain only one <drop> block', firstDuplicate.loc.start.offset, lastBlock.loc.end.offset))
   const raw = blocks[0]
   if (!raw) return { filename, source, block: null, diagnostics }
 

@@ -10,7 +10,7 @@ describe('Drop TypeScript service', () => {
     const service = createDropTypeScriptService(parsed)
     const diagnostics = service.getDropDiagnostics()
     expect(diagnostics.filter(d => d.message.includes('cannot import'))).toHaveLength(4)
-    expect(diagnostics[0].start).toBe(parsed.block!.contentStart + parsed.block!.content.indexOf('"vue"'))
+    expect(diagnostics[0]!.start).toBe(parsed.block!.contentStart + parsed.block!.content.indexOf('"vue"'))
   })
 
   it('maps unknown identifier diagnostics to the SFC', () => {

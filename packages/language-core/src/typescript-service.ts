@@ -128,8 +128,9 @@ export function createDropTypeScriptService(parsed: ParsedDropDocument, options:
       const word = /[\w$]+/.exec(virtualDocument.text.slice(position).match(/^[\w$]+/)?.[0] || '')?.[0]
       if (!word) return definitions
       const importMatch = new RegExp(`import\\s*\\{[^}]*\\b${word}\\b[^}]*\\}\\s*from\\s*["']([^"']+)["']`).exec(parsed.block?.content || '')
-      if (!importMatch || !importMatch[1].startsWith('.')) return definitions
-      const base = join(dirname(parsed.filename), importMatch[1])
+      const importPath = importMatch?.[1]
+      if (!importPath || !importPath.startsWith('.')) return definitions
+      const base = join(dirname(parsed.filename), importPath)
       const target = [base, `${base}.ts`, `${base}.tsx`, `${base}.js`, `${base}.d.ts`].find(file => projectFiles.has(file))
       if (!target) return definitions
       const targetText = projectFiles.get(target) || ''
