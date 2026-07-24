@@ -21,4 +21,10 @@ describe('Drop SSR bridge', async () => {
 
     expect(source).toContain('UserHeader')
   })
+
+  it('serves a behavior entry declared in an app widget', async () => {
+    const source = await $fetch<string>('/_drop/WidgetProbe.js')
+
+    expect(source).toContain('WidgetProbe')
+  })
 })

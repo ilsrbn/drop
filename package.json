@@ -26,6 +26,7 @@
     "playground"
   ],
   "scripts": {
+    "prepare": "npm run prepack",
     "prepack": "nuxt-module-build build",
     "dev": "npm run dev:prepare && nuxt dev playground",
     "dev:build": "nuxt build playground",
@@ -41,7 +42,9 @@
     "@vue/compiler-sfc": "^3.5.40",
     "@vue/reactivity": "^3.5.40",
     "fast-glob": "^3.3.3",
-    "magic-string": "^1.1.0"
+    "magic-string": "^1.1.0",
+    "vite": "^8.1.5",
+    "vue": "^3.5.40"
   },
   "devDependencies": {
     "@nuxt/devtools": "^3.2.4",
