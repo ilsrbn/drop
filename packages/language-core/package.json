@@ -5,5 +5,5 @@
   "type": "module",
   "exports": { ".": { "types": "./dist/index.d.ts", "import": "./dist/index.js" } },
   "scripts": { "build": "tsc -p tsconfig.json", "test": "vitest run", "typecheck": "tsc -p tsconfig.json --noEmit" },
-  "dependencies": { "@vue/compiler-sfc": "^3.5.40" }
+  "dependencies": { "@vue/compiler-sfc": "^3.5.40", "typescript": "~6.0.3" }
 }
