@@ -3,6 +3,17 @@ import type { DropSnapshot } from './types'
 
 type JsonValue = boolean | null | number | string | JsonValue[] | { [key: string]: JsonValue }
 
+export function createDropState(behaviorId: string, state: DropSnapshot) {
+  return {
+    behaviorId,
+    serialized: serializeDropState(state),
+  }
+}
+
+export function defineDropState(_state: DropSnapshot): never {
+  throw new Error('defineDropState must be compiled inside a component with a <drop> block')
+}
+
 export function serializeDropState(state: DropSnapshot): string {
   return JSON.stringify(toJsonValue(state, new WeakSet()))
     .replace(/</g, '\\u003C')

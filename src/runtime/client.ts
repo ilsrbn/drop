@@ -31,16 +31,9 @@ function disposeDropBehavior(id: string): void {
   scopesByBehavior.delete(id)
 }
 
-function readDropState(id: string, stateId: string | undefined): DropSnapshot {
-  const record = Array.from(document.querySelectorAll<HTMLScriptElement>('[data-drop-state-record]'))
-    .find(element => element.dataset.dropStateRecord === stateId)
-
-  if (!record) {
-    throw new Error(`Drop behavior "${id}" could not find its state record`)
-  }
-
+function readDropState(id: string, serialized: string | undefined): DropSnapshot {
   try {
-    const state = JSON.parse(record.textContent ?? '')
+    const state = JSON.parse(serialized ?? '')
     if (!state || typeof state !== 'object' || Array.isArray(state)) {
       throw new Error('state must be an object')
     }

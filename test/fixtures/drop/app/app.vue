@@ -1,0 +1,3 @@
+<template>
+  <UserHeader />
+</template>

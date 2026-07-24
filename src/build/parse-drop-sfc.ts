@@ -43,8 +43,17 @@ export function parseDropSfc(filename: string, source: string): ParsedDropSfc | 
   }
 
   const roots = template.ast.children.filter(node => node.type === 1)
-  if (roots.length !== 1 || roots[0]?.type !== 1 || roots[0].tag === 'component' || /^[A-Z]/.test(roots[0].tag)) {
+  const root = roots[0]
+  if (roots.length !== 1 || !root || root.tag === 'component' || /^[A-Z]/.test(root.tag)) {
     throw new Error(`${filename}: a Drop component requires one HTML root element`)
+  }
+
+  if (!descriptor.scriptSetup) {
+    throw new Error(`${filename}: a Drop component requires <script setup>`)
+  }
+
+  if (!hasDropState) {
+    throw new Error(`${filename}: a Drop component requires defineDropState`)
   }
 
   const dropBlock = dropBlocks[0]
@@ -63,11 +72,26 @@ export function parseDropSfc(filename: string, source: string): ParsedDropSfc | 
   const blockEnd = source.indexOf('</drop>', dropBlock.loc.end.offset) + '</drop>'.length
   output.remove(blockStart, blockEnd)
 
+  const behaviorId = filename.split('/').at(-1)?.replace(/\.vue$/, '') ?? filename
+  const setup = descriptor.scriptSetup
+  const macro = /\bdefineDropState\s*\(/.exec(setup.content)
+  if (!macro || macro.index === undefined) {
+    throw new Error(`${filename}: a Drop component requires defineDropState`)
+  }
+
+  const macroStart = setup.loc.start.offset + macro.index
+  const macroEnd = macroStart + macro[0].length
+  output.appendLeft(setup.loc.start.offset, 'import { createDropState } from "#drop/server"\n')
+  output.overwrite(macroStart, macroEnd, `const __drop = createDropState("${behaviorId}", `)
+
+  const rootTagEnd = source.indexOf('>', root.loc.start.offset)
+  output.appendLeft(rootTagEnd, ` data-drop-root="${behaviorId}" :data-drop-state="__drop.serialized"`)
+
   return {
     behavior: {
       code: dropBlock.content,
       filename,
-      id: filename.split('/').at(-1)?.replace(/\.vue$/, '') ?? filename,
+      id: behaviorId,
       lang: dropBlock.lang ?? 'js',
     },
     vueSource: output.toString(),

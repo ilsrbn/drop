@@ -89,8 +89,8 @@ artifacts:
 1. The normal Vue SFC template, server setup, and styles remain SSR artifacts.
 2. The custom Drop block and browser-safe imports become a hashed ESM entry.
 
-SSR adds a stable marker to the component's one real HTML root and emits the
-instance's serialized state. The ESM entry finds all matching markers and
+SSR adds a stable marker and JSON-safe serialized state as attributes on the
+component's one real HTML root. The ESM entry finds all matching markers and
 mounts itself once for each. Multiple instances load one entry. Vite may create
 a shared chunk when several Drop entries import the same state module.
 

@@ -3,13 +3,13 @@
 import { describe, expect, it, vi } from 'vitest'
 import { mountDropBehavior } from '../../src/runtime/client'
 
-function record(id: string, key: string, state: unknown) {
-  return `<section data-drop-root="${id}" data-drop-state="${key}"></section><script type="application/json" data-drop-state-record="${key}">${JSON.stringify(state)}</script>`
+function record(id: string, state: unknown) {
+  return `<section data-drop-root="${id}" data-drop-state='${JSON.stringify(state)}'></section>`
 }
 
 describe('mountDropBehavior', () => {
   it('mounts every marker and passes its state to the behavior', () => {
-    document.body.innerHTML = `${record('UserHeader', 'one', { user: null })}${record('UserHeader', 'two', { user: { username: 'Ada' } })}`
+    document.body.innerHTML = `${record('UserHeader', { user: null })}${record('UserHeader', { user: { username: 'Ada' } })}`
     const users: unknown[] = []
 
     mountDropBehavior('UserHeader', ({ state }) => {
@@ -20,7 +20,7 @@ describe('mountDropBehavior', () => {
   })
 
   it('disposes previous mounts before a remount', () => {
-    document.body.innerHTML = record('UserHeader', 'one', { user: null })
+    document.body.innerHTML = record('UserHeader', { user: null })
     const dispose = vi.fn()
 
     mountDropBehavior('UserHeader', () => dispose)
