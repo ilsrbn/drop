@@ -9,6 +9,12 @@ Drop is a Nuxt module for adding small, opt-in browser behaviors to server-rende
 
 This is useful when most of a route should stay static, but a dialog, menu, form, or other island needs a little client-side behavior. Drop does not replace Vue components: it gives you an explicit, DOM-first boundary for behavior that should hydrate independently.
 
+## Drop vs Vue hydration
+
+Vue hydration boots the Vue application in the browser, reconciles the SSR tree, and enables template bindings such as `@click`, `v-model`, and component lifecycle hooks. Drop keeps the Vue-rendered HTML as-is and loads only the small behavior entry associated with a `<drop>` block. The behavior receives a real DOM root and a serialized state snapshot, so it can work on routes where Vue hydration is intentionally omitted.
+
+Choose Vue when a feature needs reactive templates, component composition, or Vue lifecycle semantics. Choose Drop when the markup is already correct HTML and the smallest useful client boundary is a DOM event, observer, or subscription.
+
 ## Installation
 
 ```bash
@@ -24,6 +30,19 @@ export default defineNuxtConfig({
 ```
 
 The module has no required runtime configuration. It adds the `drop` SFC transform and serves generated behavior entries from `/_drop/`.
+
+## Route requirements
+
+A Drop component must contain:
+
+- one `<template>` with exactly one HTML element root (not a component root);
+- one `<script setup>` block;
+- exactly one `<drop>` block;
+- a `defineDropState(...)` call in `<script setup>`.
+
+The `<drop>` block may use `lang="js"` (the default) or `lang="ts"`. Imports from `vue`, `#app`, `#imports`, `nuxt`, or `nuxt/*` are intentionally forbidden. Import application/shared browser modules or use the Drop-safe aliases documented below.
+
+`routeRules: { '/path': { noScripts: true } }` is a good fit for static or prerendered routes. `prerender` controls when Nuxt generates HTML, while `noScripts` controls whether Nuxt emits the Vue client scripts—these options are independent.
 
 ## Minimal component
 
@@ -100,18 +119,11 @@ import { computed, effect, ref, watch } from '#drop/reactivity'
 
 `createStore(initial)` returns `get()`, `set(value)`, and `subscribe(listener)`. The reactivity alias re-exports Vue's `@vue/reactivity` primitives. Keep browser behavior independent from Vue runtime imports.
 
-## Route requirements and boundaries
+## Browser/server boundary
 
-A Drop component must contain:
+`<script setup>` executes as part of the Nuxt/Vue server render and is where `defineDropState(...)` is declared. The `<drop>` block is extracted and compiled into a separate browser module; it runs after the matching HTML root exists in `document`. Keep browser-only APIs (`document`, `window`, event listeners, observers, and `fetch`) inside `<drop>`.
 
-- one `<template>` with exactly one HTML element root (not a component root);
-- one `<script setup>` block;
-- exactly one `<drop>` block;
-- a `defineDropState(...)` call in `<script setup>`.
-
-The `<drop>` block may use `lang="js"` (the default) or `lang="ts"`. It is compiled as a standalone browser module and mounted against roots marked with `data-drop-root`. Imports from `vue`, `#app`, `#imports`, `nuxt`, or `nuxt/*` are intentionally forbidden. Import application/shared browser modules instead.
-
-`routeRules: { '/path': { noScripts: true } }` is a good fit for static or prerendered routes. Drop's generated entry is still loaded for a component on that route; Vue template hydration is not. `prerender` controls when Nuxt generates HTML, while `noScripts` controls whether Nuxt emits the Vue client scripts—these options are independent.
+Drop state crosses the boundary as escaped JSON in a `data-drop-state` attribute. It must be serializable, and it should contain only the minimum data needed by the browser behavior. The generated browser entry is served from `/_drop/<behavior-id>.js` and is loaded independently of Vue hydration. On a `noScripts` route, Vue template handlers do not run, but the Drop entry can still attach its DOM behavior.
 
 ## Editor and linting support
 
@@ -124,6 +136,20 @@ The language-tooling packages are planned, not part of the current npm package. 
 - a standalone LSP for Helix, Zed, Neovim, and other LSP clients.
 
 Until those packages are published, use the playground and the project's TypeScript/Vitest checks as the source of truth. Do not add editor setup commands from this roadmap to an application yet.
+
+### Editor matrix (planned)
+
+The following snippets are design placeholders only. They are not installable packages or supported configuration today.
+
+| Editor | Planned integration | Planned setup placeholder |
+| --- | --- | --- |
+| VS Code | Volar custom-block language service, TypeScript diagnostics, ESLint and Prettier extensions | `"volar.customBlocks": { "drop": "typescript" }` *(planned)* |
+| Neovim | standalone Drop LSP plus `nvim-lspconfig` and conform/null-ls adapters | `lspconfig.drop_ls.setup({})` *(planned)* |
+| Zed | standalone Drop LSP registration and TextMate grammar | `languages.Drop.language_servers = ["drop-lsp"]` *(planned)* |
+| Helix | standalone Drop LSP and `.sublime-syntax`/TextMate-compatible highlighting | `[[language]] name = "drop"; language-servers = ["drop-lsp"]` *(planned)* |
+| WebStorm | Vue custom-block support backed by the shared language core, ESLint, and Prettier plugins | Settings → Languages & Frameworks → Drop *(planned)* |
+
+Until an adapter is released, editors may treat `<drop>` as an unknown Vue custom block. Plain TypeScript tooling can still validate extracted examples, but no editor-specific Drop support is promised yet.
 
 ## Diagnostics and troubleshooting
 
