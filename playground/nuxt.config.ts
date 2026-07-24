@@ -1,6 +1,6 @@
 export default defineNuxtConfig({
-  modules: ['my-module'],
+  modules: ['nuxt-micro-behaviors'],
   devtools: { enabled: true },
   compatibilityDate: 'latest',
-  myModule: {},
+  microBehaviors: {},
 })
