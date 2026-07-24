@@ -23,7 +23,7 @@ export function createDropState(
 }
 
 export function defineDropState(_state: DropSnapshot): never {
-  throw new Error('defineDropState must be compiled inside a component with a <drop> block')
+  throw new Error('defineDropState must be compiled inside a component with a <script drop> block')
 }
 
 export function serializeDropState(state: DropSnapshot): string {

@@ -14,12 +14,16 @@ const { user } = defineProps<{ user: User | null }>()
 defineDropState({ user })
 </script>
 
-<drop lang="ts">
+<script drop lang="ts">
 import { session } from "~~/shared/drop/session"
 
-const { root, state, onCleanup } = useDropContext()
-const login = root.querySelector('[data-login]')
-const username = root.querySelector('[data-username]')
+const { root, state, onCleanup } = useDropContext<{ user: User | null }>()
+const login = root.querySelector<HTMLAnchorElement>('[data-login]')
+const username = root.querySelector<HTMLSpanElement>('[data-username]')
+
+if (!login || !username) {
+  throw new Error('UserHeader markup is missing Drop targets')
+}
 
 session.set(state.user)
 const unsubscribe = session.subscribe((user) => {
@@ -38,7 +42,7 @@ onCleanup(() => {
   controller.abort()
   unsubscribe()
 })
-</drop>
+</script>
 
 <style scoped>
 .header { display: flex; justify-content: space-between; gap: 1rem; padding: 1rem; }

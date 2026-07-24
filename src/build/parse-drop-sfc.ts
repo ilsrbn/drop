@@ -16,25 +16,26 @@ export interface ParsedDropSfc {
 const forbiddenImportPattern = /(?:from\s*|import\s*)["'](vue|#app|#imports|nu(?:xt)?(?:\/[^"']*)?)["']/g
 
 export function parseDropSfc(filename: string, source: string): ParsedDropSfc | null {
+  const dropScriptTags = source.match(/<script\b(?=[^>]*\bdrop\b)[^>]*>/g) ?? []
+  if (dropScriptTags.length > 1) {
+    throw new Error(`${filename}: a component can contain only one <script drop> block`)
+  }
+
   const { descriptor, errors } = parse(source, { filename })
 
   if (errors.length > 0) {
     throw new Error(`${filename}: ${errors.map(String).join('\n')}`)
   }
 
-  const dropBlocks = descriptor.customBlocks.filter(block => block.type === 'drop')
+  const dropScript = descriptor.script?.attrs.drop ? descriptor.script : undefined
   const hasDropState = /\bdefineDropState\s*\(/.test(source)
 
-  if (dropBlocks.length === 0) {
+  if (!dropScript) {
     if (hasDropState) {
-      throw new Error(`${filename}: defineDropState requires a <drop> block`)
+      throw new Error(`${filename}: defineDropState requires a <script drop> block`)
     }
 
     return null
-  }
-
-  if (dropBlocks.length > 1) {
-    throw new Error(`${filename}: a component can contain only one <drop> block`)
   }
 
   const template = descriptor.template
@@ -56,20 +57,16 @@ export function parseDropSfc(filename: string, source: string): ParsedDropSfc | 
     throw new Error(`${filename}: a Drop component requires defineDropState`)
   }
 
-  const dropBlock = dropBlocks[0]
-  if (!dropBlock) {
-    throw new Error(`${filename}: a component can contain only one <drop> block`)
-  }
-  const forbiddenImport = forbiddenImportPattern.exec(dropBlock.content)
+  const forbiddenImport = forbiddenImportPattern.exec(dropScript.content)
   forbiddenImportPattern.lastIndex = 0
 
   if (forbiddenImport) {
-    throw new Error(`${filename}: <drop> cannot import "${forbiddenImport[1]}"`)
+    throw new Error(`${filename}: <script drop> cannot import "${forbiddenImport[1]}"`)
   }
 
   const output = new MagicString(source)
-  const blockStart = source.lastIndexOf('<drop', dropBlock.loc.start.offset)
-  const blockEnd = source.indexOf('</drop>', dropBlock.loc.end.offset) + '</drop>'.length
+  const blockStart = source.lastIndexOf('<script', dropScript.loc.start.offset)
+  const blockEnd = source.indexOf('</script>', dropScript.loc.end.offset) + '</script>'.length
   output.remove(blockStart, blockEnd)
 
   const behaviorId = filename.split('/').at(-1)?.replace(/\.vue$/, '') ?? filename
@@ -89,10 +86,10 @@ export function parseDropSfc(filename: string, source: string): ParsedDropSfc | 
 
   return {
     behavior: {
-      code: dropBlock.content,
+      code: dropScript.content,
       filename,
       id: behaviorId,
-      lang: dropBlock.lang ?? 'js',
+      lang: dropScript.lang ?? 'js',
     },
     vueSource: output.toString(),
   }

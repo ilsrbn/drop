@@ -31,7 +31,15 @@ export default defineNuxtModule<ModuleOptions>({
     addTypeTemplate({
       filename: 'types/drop.d.ts',
       getContents: () => `
-declare function defineDropState(state: Record<string, unknown>): void
+declare global {
+  function defineDropState(state: Record<string, unknown>): void
+
+  function useDropContext<TState extends Record<string, unknown> = Record<string, unknown>>(): {
+    root: HTMLElement
+    state: TState
+    onCleanup(cleanup: () => void): void
+  }
+}
 
 export {}
 `,
