@@ -48,9 +48,12 @@ export {}
       })
     })
 
-    nuxt.hook('build:before', async () => {
+    // Nuxt generates .nuxt/tsconfig.json while preparing the app. Build Drop
+    // after that phase, but before Nitro copies public assets into its output.
+    nuxt.hook('nitro:build:before', async () => {
       await buildDrops({
         buildDir: nuxt.options.buildDir,
+        rootDir: nuxt.options.rootDir,
         runtimeDir: resolver.resolve('./runtime'),
         srcDir: nuxt.options.srcDir,
       })

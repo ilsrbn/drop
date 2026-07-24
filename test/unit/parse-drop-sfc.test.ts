@@ -23,7 +23,7 @@ describe('parseDropSfc', () => {
     expect(result?.behavior.code).toContain('useDropContext')
     expect(result?.vueSource).not.toContain('<drop')
     expect(result?.vueSource).toContain('data-drop-root="UserHeader"')
-    expect(result?.vueSource).toContain('const __drop = createDropState("UserHeader",')
+    expect(result?.vueSource).toContain('const __drop = createDropState(useHead, "UserHeader",')
     expect(result?.vueSource).toContain(':data-drop-state="__drop.serialized"')
   })
 

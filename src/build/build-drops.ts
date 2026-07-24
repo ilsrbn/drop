@@ -7,11 +7,12 @@ import { parseDropSfc } from './parse-drop-sfc'
 
 interface BuildDropsOptions {
   buildDir: string
+  rootDir: string
   runtimeDir: string
   srcDir: string
 }
 
-export async function buildDrops({ buildDir, runtimeDir, srcDir }: BuildDropsOptions): Promise<void> {
+export async function buildDrops({ buildDir, rootDir, runtimeDir, srcDir }: BuildDropsOptions): Promise<void> {
   const files = await fg(['components/**/*.vue', 'app/components/**/*.vue'], {
     cwd: srcDir,
     absolute: true,
@@ -45,13 +46,21 @@ mountDropBehavior(${JSON.stringify(parsed.behavior.id)}, behavior)
 
   await build({
     configFile: false,
+    root: rootDir,
+    esbuild: {
+      tsconfigRaw: {
+        compilerOptions: {},
+      },
+    },
     resolve: {
       alias: {
         '#drop/runtime': join(runtimeDir, 'client.ts'),
         '#drop/state': join(runtimeDir, 'store.ts'),
         '#drop/reactivity': join(runtimeDir, 'reactivity.ts'),
-        '~': srcDir,
-        '@': srcDir,
+        '~': rootDir,
+        '@': rootDir,
+        '~~': rootDir,
+        '@@': rootDir,
       },
     },
     build: {

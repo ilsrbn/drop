@@ -81,8 +81,8 @@ export function parseDropSfc(filename: string, source: string): ParsedDropSfc | 
 
   const macroStart = setup.loc.start.offset + macro.index
   const macroEnd = macroStart + macro[0].length
-  output.appendLeft(setup.loc.start.offset, 'import { createDropState } from "#drop/server"\n')
-  output.overwrite(macroStart, macroEnd, `const __drop = createDropState("${behaviorId}", `)
+  output.appendLeft(setup.loc.start.offset, 'import { useHead } from "#imports"\nimport { createDropState } from "#drop/server"\n')
+  output.overwrite(macroStart, macroEnd, `const __drop = createDropState(useHead, "${behaviorId}", `)
 
   const rootTagEnd = source.indexOf('>', root.loc.start.offset)
   output.appendLeft(rootTagEnd, ` data-drop-root="${behaviorId}" :data-drop-state="__drop.serialized"`)

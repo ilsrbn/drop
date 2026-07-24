@@ -105,7 +105,6 @@ export function compileDropBehavior(behavior: DropBehaviorSource): string {
 
   return `${imports.join('')}\nexport default function dropBehavior(context) {
   const useDropContext = () => context
-  const onCleanup = context.onCleanup
 ${body}
 }
 `
