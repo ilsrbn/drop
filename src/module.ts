@@ -1,4 +1,5 @@
 import { addImports, addTypeTemplate, addVitePlugin, createResolver, defineNuxtModule } from '@nuxt/kit'
+import { buildDrops } from './build/build-drops'
 import { createDropSfcTransformPlugin } from './build/drop-vite-plugin'
 
 export interface ModuleOptions {
@@ -37,5 +38,22 @@ export {}
     })
 
     addVitePlugin(createDropSfcTransformPlugin())
+
+    nuxt.hook('nitro:config', (config) => {
+      config.publicAssets ||= []
+      config.publicAssets.push({
+        baseURL: '/_drop',
+        dir: resolver.resolve(nuxt.options.buildDir, 'drop'),
+        maxAge: 0,
+      })
+    })
+
+    nuxt.hook('build:before', async () => {
+      await buildDrops({
+        buildDir: nuxt.options.buildDir,
+        runtimeDir: resolver.resolve('./runtime'),
+        srcDir: nuxt.options.srcDir,
+      })
+    })
   },
 })

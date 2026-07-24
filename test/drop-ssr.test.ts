@@ -12,6 +12,13 @@ describe('Drop SSR bridge', async () => {
 
     expect(html).toContain('data-drop-root="UserHeader"')
     expect(html).toContain('data-drop-state="{&quot;user&quot;:null}"')
+    expect(html).toMatch(/<script[^>]+src="\/_drop\/UserHeader\.js"[^>]+type="module"/)
     expect(html).not.toMatch(/_nuxt\/.*entry/)
+  })
+
+  it('serves a behavior entry that mounts the component', async () => {
+    const source = await $fetch<string>('/_drop/UserHeader.js')
+
+    expect(source).toContain('UserHeader')
   })
 })

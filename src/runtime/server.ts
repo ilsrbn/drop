@@ -1,9 +1,18 @@
 import { isRef } from '@vue/reactivity'
+import { useHead } from '@unhead/vue'
 import type { DropSnapshot } from './types'
 
 type JsonValue = boolean | null | number | string | JsonValue[] | { [key: string]: JsonValue }
 
 export function createDropState(behaviorId: string, state: DropSnapshot) {
+  useHead({
+    script: [{
+      key: `drop:${behaviorId}`,
+      src: `/_drop/${behaviorId}.js`,
+      type: 'module',
+    }],
+  })
+
   return {
     behaviorId,
     serialized: serializeDropState(state),
