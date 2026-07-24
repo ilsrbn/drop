@@ -9,6 +9,8 @@ Drop is a Nuxt module for adding small, opt-in browser behaviors to server-rende
 
 This is useful when most of a route should stay static, but a dialog, menu, form, or other island needs a little client-side behavior. Drop does not replace Vue components: it gives you an explicit, DOM-first boundary for behavior that should hydrate independently.
 
+Repository: <https://github.com/ilsrbn/drop>
+
 ## Drop vs Vue hydration
 
 Vue hydration boots the Vue application in the browser, reconciles the SSR tree, and enables template bindings such as `@click`, `v-model`, and component lifecycle hooks. Drop keeps the Vue-rendered HTML as-is and loads only the small behavior entry associated with a `<drop>` block. The behavior receives a real DOM root and a serialized state snapshot, so it can work on routes where Vue hydration is intentionally omitted.
@@ -30,19 +32,6 @@ export default defineNuxtConfig({
 ```
 
 The module has no required runtime configuration. It adds the `drop` SFC transform and serves generated behavior entries from `/_drop/`.
-
-## Route requirements
-
-A Drop component must contain:
-
-- one `<template>` with exactly one HTML element root (not a component root);
-- one `<script setup>` block;
-- exactly one `<drop>` block;
-- a `defineDropState(...)` call in `<script setup>`.
-
-The `<drop>` block may use `lang="js"` (the default) or `lang="ts"`. Imports from `vue`, `#app`, `#imports`, `nuxt`, or `nuxt/*` are intentionally forbidden. Import application/shared browser modules or use the Drop-safe aliases documented below.
-
-`routeRules: { '/path': { noScripts: true } }` is a good fit for static or prerendered routes. `prerender` controls when Nuxt generates HTML, while `noScripts` controls whether Nuxt emits the Vue client scripts—these options are independent.
 
 ## Minimal component
 
@@ -119,6 +108,19 @@ import { computed, effect, ref, watch } from '#drop/reactivity'
 
 `createStore(initial)` returns `get()`, `set(value)`, and `subscribe(listener)`. The reactivity alias re-exports Vue's `@vue/reactivity` primitives. Keep browser behavior independent from Vue runtime imports.
 
+## Route requirements
+
+A Drop component must contain:
+
+- one `<template>` with exactly one HTML element root (not a component root);
+- one `<script setup>` block;
+- exactly one `<drop>` block;
+- a `defineDropState(...)` call in `<script setup>`.
+
+The `<drop>` block may use `lang="js"` (the default) or `lang="ts"`. Imports from `vue`, `#app`, `#imports`, `nuxt`, or `nuxt/*` are intentionally forbidden. Import application/shared browser modules or use the Drop-safe aliases documented below.
+
+`routeRules: { '/path': { noScripts: true } }` is a good fit for static or prerendered routes. `prerender` controls when Nuxt generates HTML, while `noScripts` controls whether Nuxt emits the Vue client scripts—these options are independent.
+
 ## Browser/server boundary
 
 `<script setup>` executes as part of the Nuxt/Vue server render and is where `defineDropState(...)` is declared. The `<drop>` block is extracted and compiled into a separate browser module; it runs after the matching HTML root exists in `document`. Keep browser-only APIs (`document`, `window`, event listeners, observers, and `fetch`) inside `<drop>`.
@@ -147,7 +149,7 @@ The following snippets are design placeholders only. They are not installable pa
 | Neovim | standalone Drop LSP plus `nvim-lspconfig` and conform/null-ls adapters | `lspconfig.drop_ls.setup({})` *(planned)* |
 | Zed | standalone Drop LSP registration and TextMate grammar | `languages.Drop.language_servers = ["drop-lsp"]` *(planned)* |
 | Helix | standalone Drop LSP and `.sublime-syntax`/TextMate-compatible highlighting | `[[language]] name = "drop"; language-servers = ["drop-lsp"]` *(planned)* |
-| WebStorm | Vue custom-block support backed by the shared language core, ESLint, and Prettier plugins | Settings → Languages & Frameworks → Drop *(planned)* |
+| WebStorm | Generic standalone LSP plus TextMate grammar where available; no JetBrains-specific Drop plugin is planned for the first release | Configure a generic LSP/grammar integration *(planned)* |
 
 Until an adapter is released, editors may treat `<drop>` as an unknown Vue custom block. Plain TypeScript tooling can still validate extracted examples, but no editor-specific Drop support is promised yet.
 
@@ -175,6 +177,10 @@ npm run dev:build    # build the playground
 
 The playground contains working examples in `playground/app/components/` and shared browser state in `playground/shared/drop/`.
 
+## Contribution
+
+Issues and pull requests are welcome at <https://github.com/ilsrbn/drop>. For local changes, run `npm install`, then `npm run dev:prepare`, `npm run lint`, and `npm run test`. Keep new behavior covered by focused unit tests and update the README when public APIs or constraints change.
+
 ## Testing
 
 ```bash
@@ -197,6 +203,7 @@ The release script runs linting, tests, the package build, changelog generation,
 
 - Volar, ESLint, Prettier, TextMate, and standalone-LSP adapters described above;
 - richer diagnostics for state serializability and forbidden imports;
+- optional soft navigation between static pages without requiring full Vue hydration;
 - editor fixtures covering VS Code, WebStorm, Neovim, Helix, and Zed.
 
 ## License
