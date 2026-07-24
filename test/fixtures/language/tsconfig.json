@@ -1,0 +1,3 @@
+{
+  "compilerOptions": { "strict": true, "target": "ESNext", "module": "ESNext", "lib": ["ESNext", "DOM"], "moduleResolution": "Bundler", "paths": { "#drop/*": ["../../packages/language-core/src/*"] } }
+}

@@ -23,7 +23,8 @@
     "dist"
   ],
   "workspaces": [
-    "playground"
+    "playground",
+    "packages/*"
   ],
   "scripts": {
     "prepare": "npm run prepack",
