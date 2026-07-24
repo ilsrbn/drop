@@ -5,5 +5,6 @@ export default defineNuxtConfig({
   drop: {},
   routeRules: {
     '/': { noScripts: true },
+    '/test': { noScripts: true },
   },
 })

@@ -3,7 +3,10 @@ import { parseDropSfc, type DropBehaviorSource } from './parse-drop-sfc'
 
 const vueFilePattern = /\.vue$/
 
-export function createDropSfcTransformPlugin(srcDir?: string): Plugin {
+export function createDropSfcTransformPlugin(
+  srcDir?: string,
+  onDropSfcChange?: () => Promise<void> | void,
+): Plugin {
   return {
     name: 'drop:sfc-transform',
     enforce: 'pre',
@@ -21,6 +24,14 @@ export function createDropSfcTransformPlugin(srcDir?: string): Plugin {
         code: parsed.vueSource,
         map: null,
       }
+    },
+    async handleHotUpdate({ file, read, server }) {
+      if (!vueFilePattern.test(file) || !parseDropSfc(file, await read(), srcDir)) {
+        return
+      }
+
+      await onDropSfcChange?.()
+      server.ws.send({ type: 'full-reload' })
     },
   }
 }

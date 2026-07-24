@@ -44,8 +44,18 @@ export {}
 `,
     })
 
+    const rebuildDrops = async () => {
+      const { buildDrops } = await import('./build/build-drops')
+      await buildDrops({
+        buildDir: nuxt.options.buildDir,
+        rootDir: nuxt.options.rootDir,
+        runtimeDir,
+        srcDir: nuxt.options.srcDir,
+      })
+    }
+
     const { createDropSfcTransformPlugin } = await import('./build/drop-vite-plugin')
-    addVitePlugin(createDropSfcTransformPlugin(nuxt.options.srcDir))
+    addVitePlugin(createDropSfcTransformPlugin(nuxt.options.srcDir, rebuildDrops))
 
     nuxt.hook('nitro:config', (config) => {
       config.publicAssets ||= []
@@ -59,13 +69,7 @@ export {}
     // Nuxt generates .nuxt/tsconfig.json while preparing the app. Build Drop
     // after that phase, but before Nitro copies public assets into its output.
     nuxt.hook('nitro:build:before', async () => {
-      const { buildDrops } = await import('./build/build-drops')
-      await buildDrops({
-        buildDir: nuxt.options.buildDir,
-        rootDir: nuxt.options.rootDir,
-        runtimeDir,
-        srcDir: nuxt.options.srcDir,
-      })
+      await rebuildDrops()
     })
   },
 })
