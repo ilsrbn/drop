@@ -19,11 +19,11 @@ describe('parseDropSfc', () => {
   it('extracts one Drop block and removes it from the Vue SFC source', () => {
     const result = parseDropSfc('app/components/UserHeader.vue', validSource)
 
-    expect(result?.behavior.id).toBe('UserHeader')
+    expect(result?.behavior.id).toMatch(/^UserHeader--/)
     expect(result?.behavior.code).toContain('useDropContext')
     expect(result?.vueSource).not.toContain('<drop')
-    expect(result?.vueSource).toContain('data-drop-root="UserHeader"')
-    expect(result?.vueSource).toContain('const __drop = createDropState(useHead, "UserHeader",')
+    expect(result?.vueSource).toContain('data-drop-root="UserHeader--')
+    expect(result?.vueSource).toContain('const __drop = createDropState(useHead, "UserHeader--')
     expect(result?.vueSource).toContain(':data-drop-state="__drop.serialized"')
   })
 
@@ -55,5 +55,13 @@ describe('parseDropSfc', () => {
     const source = validSource.replace(/<drop[\s\S]*?<\/drop>/, '')
 
     expect(() => parseDropSfc('Bad.vue', source)).toThrow(/defineDropState requires a <drop>/)
+  })
+
+  it('derives distinct behavior IDs for same-named components in different paths', () => {
+    const srcDir = '/project/app'
+    const header = parseDropSfc('/project/app/components/UserHeader.vue', validSource, srcDir)
+    const widget = parseDropSfc('/project/app/widgets/header/UserHeader.vue', validSource, srcDir)
+
+    expect(header?.behavior.id).not.toBe(widget?.behavior.id)
   })
 })

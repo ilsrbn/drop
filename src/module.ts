@@ -45,7 +45,7 @@ export {}
     })
 
     const { createDropSfcTransformPlugin } = await import('./build/drop-vite-plugin')
-    addVitePlugin(createDropSfcTransformPlugin())
+    addVitePlugin(createDropSfcTransformPlugin(nuxt.options.srcDir))
 
     nuxt.hook('nitro:config', (config) => {
       config.publicAssets ||= []

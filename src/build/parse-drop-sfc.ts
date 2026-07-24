@@ -1,3 +1,4 @@
+import { basename, isAbsolute, relative } from 'node:path'
 import MagicString from 'magic-string'
 import { parse } from 'vue/compiler-sfc'
 
@@ -15,7 +16,7 @@ export interface ParsedDropSfc {
 
 const forbiddenImportPattern = /(?:from\s*|import\s*)["'](vue|#app|#imports|nu(?:xt)?(?:\/[^"']*)?)["']/g
 
-export function parseDropSfc(filename: string, source: string): ParsedDropSfc | null {
+export function parseDropSfc(filename: string, source: string, srcDir?: string): ParsedDropSfc | null {
   const { descriptor, errors } = parse(source, { filename })
 
   if (errors.length > 0) {
@@ -72,7 +73,7 @@ export function parseDropSfc(filename: string, source: string): ParsedDropSfc | 
   const blockEnd = source.indexOf('</drop>', dropBlock.loc.end.offset) + '</drop>'.length
   output.remove(blockStart, blockEnd)
 
-  const behaviorId = filename.split('/').at(-1)?.replace(/\.vue$/, '') ?? filename
+  const behaviorId = createBehaviorId(filename, srcDir)
   const setup = descriptor.scriptSetup
   const macro = /\bdefineDropState\s*\(/.exec(setup.content)
   if (!macro || macro.index === undefined) {
@@ -96,4 +97,13 @@ export function parseDropSfc(filename: string, source: string): ParsedDropSfc | 
     },
     vueSource: output.toString(),
   }
+}
+
+function createBehaviorId(filename: string, srcDir?: string): string {
+  const relativeFilename = srcDir && isAbsolute(filename)
+    ? relative(srcDir, filename)
+    : filename
+  const encodedPath = Buffer.from(relativeFilename.replaceAll('\\', '/')).toString('base64url')
+
+  return `${basename(filename, '.vue')}--${encodedPath}`
 }

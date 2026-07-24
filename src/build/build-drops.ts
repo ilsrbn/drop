@@ -25,7 +25,7 @@ export async function buildDrops({ buildDir, rootDir, runtimeDir, srcDir }: Buil
   await mkdir(entryDir, { recursive: true })
 
   for (const filename of files) {
-    const parsed = parseDropSfc(filename, await readFile(filename, 'utf8'))
+    const parsed = parseDropSfc(filename, await readFile(filename, 'utf8'), srcDir)
     if (!parsed) {
       continue
     }
@@ -55,9 +55,9 @@ mountDropBehavior(${JSON.stringify(parsed.behavior.id)}, behavior)
     },
     resolve: {
       alias: {
-        '#drop/runtime': join(runtimeDir, 'client.ts'),
-        '#drop/state': join(runtimeDir, 'store.ts'),
-        '#drop/reactivity': join(runtimeDir, 'reactivity.ts'),
+        '#drop/runtime': join(runtimeDir, 'client'),
+        '#drop/state': join(runtimeDir, 'store'),
+        '#drop/reactivity': join(runtimeDir, 'reactivity'),
         '~': rootDir,
         '@': rootDir,
         '~~': rootDir,
