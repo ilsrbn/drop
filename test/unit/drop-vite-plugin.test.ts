@@ -8,7 +8,7 @@ const source = `
 `
 
 describe('Drop Vite transform', () => {
-  it('removes a Drop custom block before Vue compiles the SFC', () => {
+  it('removes a Drop block before Vue compiles the SFC', () => {
     const result = transformDropSfc(source, '/app/components/UserHeader.vue')
 
     expect(result).toMatchObject({
