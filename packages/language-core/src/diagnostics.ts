@@ -22,8 +22,9 @@ export function getDropDiagnostics(parsed: ParsedDropDocument): DropDiagnostic[]
       : fromImport ? [fromImport] : sideEffectImport ? [sideEffectImport] : []
     for (const match of matches) {
       const moduleName = match[2]
-      if (!moduleName || !forbiddenModules.test(moduleName)) continue
-      const quoteOffset = match.index + match[0].indexOf(match[1])
+      const quote = match[1]
+      if (!moduleName || !quote || !forbiddenModules.test(moduleName)) continue
+      const quoteOffset = match.index + match[0].indexOf(quote)
       const start = block.contentStart + lineOffset + quoteOffset
       diagnostics.push({
         message: `<drop> cannot import "${moduleName}"`,
