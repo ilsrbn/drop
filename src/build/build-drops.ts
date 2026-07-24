@@ -16,7 +16,7 @@ export async function buildDrops({ buildDir, rootDir, runtimeDir, srcDir }: Buil
   const files = await fg('**/*.vue', {
     cwd: srcDir,
     absolute: true,
-    ignore: ['node_modules/**', '.nuxt/**', '.output/**'],
+    ignore: ['**/node_modules/**', '**/.nuxt/**', '**/.output/**'],
   })
   const entryDir = join(buildDir, 'drop-entries')
   const outputDir = join(buildDir, 'drop')
