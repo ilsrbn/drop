@@ -8,23 +8,23 @@ function record(id: string, state: unknown) {
 }
 
 describe('mountDropBehavior', () => {
-  it('mounts every marker and passes its state to the behavior', () => {
+  it('mounts every marker and passes its state to the behavior', async () => {
     document.body.innerHTML = `${record('UserHeader', { user: null })}${record('UserHeader', { user: { username: 'Ada' } })}`
     const users: unknown[] = []
 
-    mountDropBehavior('UserHeader', ({ state }) => {
+    await mountDropBehavior('UserHeader', ({ state }) => {
       users.push(state.user)
     })
 
     expect(users).toEqual([null, { username: 'Ada' }])
   })
 
-  it('disposes previous mounts before a remount', () => {
+  it('disposes previous mounts before a remount', async () => {
     document.body.innerHTML = record('UserHeader', { user: null })
     const dispose = vi.fn()
 
-    mountDropBehavior('UserHeader', () => dispose)
-    mountDropBehavior('UserHeader', () => undefined)
+    await mountDropBehavior('UserHeader', () => dispose)
+    await mountDropBehavior('UserHeader', () => undefined)
 
     expect(dispose).toHaveBeenCalledOnce()
   })

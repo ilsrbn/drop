@@ -3,10 +3,7 @@
 </template>
 
 <script setup lang="ts">
-defineDropState({ enabled: true })
+defineDrop({ state: { enabled: true } }, (ctx) => {
+  ctx.root.dataset.ready = 'true'
+})
 </script>
-
-<drop lang="ts">
-const { root } = useDropContext()
-root.dataset.ready = 'true'
-</drop>

@@ -3,7 +3,7 @@ import type { DropBehavior, DropSnapshot } from './types'
 
 const scopesByBehavior = new Map<string, CleanupScope[]>()
 
-export function mountDropBehavior(id: string, behavior: DropBehavior): void {
+export async function mountDropBehavior(id: string, behavior: DropBehavior): Promise<void> {
   disposeDropBehavior(id)
 
   const scopes: CleanupScope[] = []
@@ -16,7 +16,7 @@ export function mountDropBehavior(id: string, behavior: DropBehavior): void {
 
     const state = readDropState(id, root.dataset.dropState)
     const scope = createCleanupScope()
-    const cleanup = behavior(createDropContext(root, state, scope))
+    const cleanup = await behavior(createDropContext(root, state, scope))
     if (cleanup) {
       scope.onCleanup(cleanup)
     }
@@ -40,6 +40,6 @@ function readDropState(id: string, serialized: string | undefined): DropSnapshot
     return state as DropSnapshot
   }
   catch (error) {
-    throw new Error(`Drop behavior "${id}" has invalid state: ${error instanceof Error ? error.message : String(error)}`)
+    throw new Error(`Drop behavior "${id}" has invalid state: ${error instanceof Error ? error.message : String(error)}`, { cause: error })
   }
 }

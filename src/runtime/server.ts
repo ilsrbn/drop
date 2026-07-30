@@ -1,4 +1,4 @@
-import { isRef } from '@vue/reactivity'
+import { isRef } from 'vue'
 import type { DropSnapshot } from './types'
 
 type JsonValue = boolean | null | number | string | JsonValue[] | { [key: string]: JsonValue }
@@ -22,8 +22,8 @@ export function createDropState(
   }
 }
 
-export function defineDropState(_state: DropSnapshot): never {
-  throw new Error('defineDropState must be compiled inside a component with a <drop> block')
+export function defineDrop(_options: { state: DropSnapshot }, _behavior: () => unknown): never {
+  throw new Error('defineDrop must be compiled inside a component <script setup>')
 }
 
 export function serializeDropState(state: DropSnapshot): string {

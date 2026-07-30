@@ -13,19 +13,16 @@ describe('README', () => {
     }
   })
 
-  it('documents the public API, route options, and tooling status', async () => {
+  it('documents the macro API, route options, and size budget', async () => {
     const readme = await readFile(readmePath, 'utf8')
 
     for (const requiredText of [
-      '<drop',
-      'defineDropState',
-      'useDropContext',
-      'onCleanup',
+      'defineDrop',
+      'ctx.onCleanup',
+      'ctx.signal',
       'noScripts',
       'prerender',
-      'ESLint',
-      'Volar',
-      'Prettier',
+      '5 kB gzip',
       'npm run test',
     ]) {
       expect(readme).toContain(requiredText)

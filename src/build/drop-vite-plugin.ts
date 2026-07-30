@@ -53,11 +53,26 @@ export function transformDropSfc(source: string, id: string, srcDir?: string) {
 }
 
 export function compileDropBehavior(behavior: DropBehaviorSource): string {
-  const imports = behavior.code.match(/^\s*import[^\n]+(?:\n|$)/gm) ?? []
-  const body = behavior.code.replace(/^\s*import[^\n]+(?:\n|$)/gm, '')
+  const usesSignal = /\bctx\.signal\b/.test(behavior.code)
+  const usesComputed = /\bctx\.computed\b/.test(behavior.code)
+  const usesEffect = /\bctx\.effect\b/.test(behavior.code)
+  const imports = [
+    usesSignal ? 'signal' : '',
+    usesComputed ? 'computed' : '',
+    usesEffect ? 'effect as alienEffect' : '',
+  ].filter(Boolean)
+  const body = behavior.code.replace(/\bctx\.load\(\s*(['"][^'"]+['"])\s*\)/g, 'import($1)')
+  const helpers = [
+    usesSignal ? 'signal' : '',
+    usesComputed ? 'computed' : '',
+    usesEffect ? 'effect: (fn) => { const stop = alienEffect(fn); context.onCleanup(stop); return stop }' : '',
+  ].filter(Boolean)
+  const reactivityImport = imports.length > 0
+    ? `import { ${imports.join(', ')} } from '#drop/reactivity'\n`
+    : ''
 
-  return `${imports.join('')}\nexport default function dropBehavior(context) {
-  const useDropContext = () => context
+  return `${reactivityImport}export default async function dropBehavior(context) {
+  const ctx = ${helpers.length > 0 ? `{ ...context, ${helpers.join(', ')} }` : 'context'}
 ${body}
 }
 `

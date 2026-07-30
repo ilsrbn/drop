@@ -35,7 +35,7 @@ export async function buildDrops({ buildDir, rootDir, runtimeDir, srcDir }: Buil
 import behavior from ${JSON.stringify(`./${parsed.behavior.id}.behavior.ts`)}
 import { mountDropBehavior } from '#drop/runtime'
 
-mountDropBehavior(${JSON.stringify(parsed.behavior.id)}, behavior)
+void mountDropBehavior(${JSON.stringify(parsed.behavior.id)}, behavior)
 `)
     await writeFile(join(entryDir, `${parsed.behavior.id}.behavior.ts`), compileDropBehavior(parsed.behavior))
     entries[parsed.behavior.id] = entry

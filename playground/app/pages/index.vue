@@ -10,7 +10,9 @@
 </template>
 
 <script setup lang="ts">
-import type { User } from "~~/shared/drop/session"
+import type { User } from '~~/shared/drop/session'
+
+defineOptions({ name: 'DropPlayground' })
 
 const { data } = await useFetch<{ user: User | null }>('/api/demo-session')
 const user = computed(() => data.value?.user ?? null)

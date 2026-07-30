@@ -1,39 +1,45 @@
 <template>
   <dialog data-dialog>
-    <form method="dialog" data-form>
+    <form
+      method="dialog"
+      data-form
+    >
       <p>Войти как Ada Lovelace?</p>
-      <button type="submit">Продолжить</button>
-      <button type="button" data-close>Отмена</button>
+      <button type="submit">
+        Продолжить
+      </button>
+      <button
+        type="button"
+        data-close
+      >
+        Отмена
+      </button>
     </form>
   </dialog>
 </template>
 
 <script setup lang="ts">
-defineDropState({})
-</script>
+defineDrop({ state: {} }, async (ctx) => {
+  const { session } = await (ctx.load('~~/shared/drop/session') as Promise<typeof import('~~/shared/drop/session')>)
+  const dialog = ctx.root as HTMLDialogElement
+  const form = ctx.root.querySelector<HTMLFormElement>('[data-form]')
+  const close = ctx.root.querySelector<HTMLButtonElement>('[data-close]')
 
-<drop lang="ts">
-import { session } from "~~/shared/drop/session"
+  if (!form || !close) {
+    throw new Error('LoginDialog markup is missing Drop targets')
+  }
 
-const { root, onCleanup } = useDropContext()
-const dialog = root as HTMLDialogElement
-const form = root.querySelector<HTMLFormElement>('[data-form]')
-const close = root.querySelector<HTMLButtonElement>('[data-close]')
+  const open = () => dialog.showModal()
+  document.addEventListener('drop:login-request', open)
+  close.addEventListener('click', () => dialog.close())
+  form.addEventListener('submit', async (event) => {
+    event.preventDefault()
+    const response = await fetch('/api/demo-login', { method: 'POST' })
+    const { user } = await response.json()
+    session.set(user)
+    dialog.close()
+  })
 
-if (!form || !close) {
-  throw new Error('LoginDialog markup is missing Drop targets')
-}
-
-const open = () => dialog.showModal()
-document.addEventListener('drop:login-request', open)
-close.addEventListener('click', () => dialog.close())
-form.addEventListener('submit', async (event) => {
-  event.preventDefault()
-  const response = await fetch('/api/demo-login', { method: 'POST' })
-  const { user } = await response.json()
-  session.set(user)
-  dialog.close()
+  ctx.onCleanup(() => document.removeEventListener('drop:login-request', open))
 })
-
-onCleanup(() => document.removeEventListener('drop:login-request', open))
-</drop>
+</script>
