@@ -1,9 +1,12 @@
 {
-  "name": "drop",
+  "name": "@ilsrbn/drop",
   "version": "1.0.0",
   "description": "Opt-in browser behaviors for static Nuxt routes",
   "repository": "ilsrbn/drop",
   "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  },
   "type": "module",
   "exports": {
     ".": {

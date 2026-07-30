@@ -7,12 +7,12 @@ behavior declared by a component's `defineDrop` macro.
 ## Install
 
 ```bash
-npm install drop
+npm install @ilsrbn/drop
 ```
 
 ```ts
 export default defineNuxtConfig({
-  modules: ['drop'],
+  modules: ['@ilsrbn/drop'],
 })
 ```
 

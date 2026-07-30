@@ -137,7 +137,7 @@ function findDefineDropMacro(filename: string, source: string): MacroCall | null
     }
 
     for (const binding of topLevelBindings) {
-      if (new RegExp(`\\b${escapeRegExp(binding)}\\b`).test(callbackSource)) {
+      if (new RegExp(`(?<![.$\\w])\\b${escapeRegExp(binding)}\\b`).test(callbackSource)) {
         throw new Error(`${filename}: defineDrop cannot capture "${binding}"; pass server values through options.state or declare browser-only values inside the callback`)
       }
     }
