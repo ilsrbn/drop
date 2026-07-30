@@ -5,10 +5,7 @@
 <script setup lang="ts">
 const user = null
 
-defineDropState({ user })
+defineDrop({ state: { user } }, (ctx) => {
+  ctx.root.dataset.ready = 'true'
+})
 </script>
-
-<drop lang="ts">
-const { root } = useDropContext()
-root.dataset.ready = 'true'
-</drop>

@@ -28,16 +28,16 @@ export default defineNuxtModule<ModuleOptions>({
     nuxt.options.alias['#drop/runtime'] = resolve(runtimeDir, 'client')
     nuxt.options.alias['#drop/server'] = resolve(runtimeDir, 'server')
 
-    addImports({
-      name: 'defineDropState',
-      from: resolve(runtimeDir, 'server'),
-    })
+    addImports({ name: 'defineDrop', from: resolve(runtimeDir, 'server') })
 
     addTypeTemplate({
       filename: 'types/drop.d.ts',
       getContents: () => `
 declare global {
-  function defineDropState(state: Record<string, unknown>): void
+  function defineDrop<TState extends Record<string, unknown>>(
+    options: { state: TState },
+    behavior: (ctx: import(${JSON.stringify(resolve(runtimeDir, 'types'))}).DropContext<TState>) => void | (() => void) | Promise<void | (() => void)>,
+  ): void
 }
 
 export {}

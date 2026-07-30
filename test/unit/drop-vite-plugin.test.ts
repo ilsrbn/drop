@@ -1,18 +1,17 @@
 import { describe, expect, it, vi } from 'vitest'
-import { transformDropSfc } from '../../src/build/drop-vite-plugin'
+import { compileDropBehavior, transformDropSfc } from '../../src/build/drop-vite-plugin'
 
 const source = `
 <template><header>Drop</header></template>
-<script setup lang="ts">defineDropState({ user: null })</script>
-<drop lang="ts">const { root } = useDropContext()</drop>
+<script setup lang="ts">defineDrop({ state: { user: null } }, (ctx) => { ctx.root.hidden = false })</script>
 `
 
 describe('Drop Vite transform', () => {
-  it('removes a Drop block before Vue compiles the SFC', () => {
+  it('removes a defineDrop call before Vue compiles the SFC', () => {
     const result = transformDropSfc(source, '/app/components/UserHeader.vue')
 
     expect(result).toMatchObject({
-      code: expect.not.stringContaining('<drop'),
+      code: expect.not.stringContaining('defineDrop('),
     })
   })
 
@@ -22,6 +21,20 @@ describe('Drop Vite transform', () => {
     expect(result).toBeNull()
   })
 
+  it('injects only used signal helpers and compiles ctx.load to a dynamic import', () => {
+    const behavior = compileDropBehavior({
+      code: 'const open = ctx.signal(false)\nctx.effect(() => open())\nawait ctx.load(\'lenis\')',
+      filename: 'Widget.vue',
+      id: 'Widget',
+      lang: 'ts',
+    })
+
+    expect(behavior).toContain('import { signal, effect as alienEffect } from \'#drop/reactivity\'')
+    expect(behavior).toContain('await import(\'lenis\')')
+    expect(behavior).toContain('context.onCleanup(stop)')
+    expect(behavior).not.toContain('computed,')
+  })
+
   it('rebuilds Drop behaviors and reloads the page on a hot update', async () => {
     const rebuild = vi.fn()
     const reload = vi.fn()
@@ -29,7 +42,7 @@ describe('Drop Vite transform', () => {
     const plugin = createDropSfcTransformPlugin('/app', rebuild)
 
     if (typeof plugin.handleHotUpdate !== 'function') {
-      throw new Error('Drop plugin must handle hot updates')
+      throw new TypeError('Drop plugin must handle hot updates')
     }
 
     await plugin.handleHotUpdate.call({} as never, {

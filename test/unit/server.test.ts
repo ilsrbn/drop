@@ -1,4 +1,4 @@
-import { ref } from '@vue/reactivity'
+import { ref } from 'vue'
 import { describe, expect, it } from 'vitest'
 import { serializeDropState } from '../../src/runtime/server'
 

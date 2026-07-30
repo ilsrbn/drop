@@ -1,11 +1,30 @@
 import { describe, expect, it } from 'vitest'
-import { computed, ref } from '../../src/runtime/reactivity'
+import { createDropReactivityScope, computed, effect, signal } from '../../src/runtime/reactivity'
 
 describe('Drop reactivity', () => {
-  it('exports opt-in Vue reactivity primitives', () => {
-    const count = ref(1)
-    const doubled = computed(() => count.value * 2)
+  it('stops behavior effects when its Drop scope is disposed', () => {
+    const count = signal(1)
+    const scope = createDropReactivityScope()
+    let observed = 0
 
-    expect(doubled.value).toBe(2)
+    scope.run(() => {
+      effect(() => {
+        observed = count()
+      })
+    })
+
+    count(2)
+    expect(observed).toBe(2)
+
+    scope.dispose()
+    count(3)
+    expect(observed).toBe(2)
+  })
+
+  it('supports computed signals', () => {
+    const count = signal(1)
+    const doubled = computed(() => count() * 2)
+
+    expect(doubled()).toBe(2)
   })
 })

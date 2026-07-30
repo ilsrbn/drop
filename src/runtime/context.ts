@@ -1,4 +1,4 @@
-import type { DropContext, DropSnapshot } from './types'
+import type { DropBaseContext, DropSnapshot } from './types'
 
 export interface CleanupScope {
   dispose(): void
@@ -34,7 +34,7 @@ export function createDropContext<TState extends DropSnapshot>(
   root: HTMLElement,
   state: TState,
   scope: CleanupScope,
-): DropContext<TState> {
+): DropBaseContext<TState> {
   return {
     root,
     state,

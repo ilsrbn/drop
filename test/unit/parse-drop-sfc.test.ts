@@ -7,30 +7,28 @@ const validSource = `
 </template>
 
 <script setup lang="ts">
-defineDropState({ user: null })
+defineDrop({ state: { user: null } }, (ctx) => {
+  ctx.root.classList.add('ready')
+})
 </script>
-
-<drop lang="ts">
-const { root } = useDropContext()
-</drop>
 `
 
 describe('parseDropSfc', () => {
-  it('extracts one Drop block and removes it from the Vue SFC source', () => {
+  it('extracts a defineDrop callback and removes it from the Vue SFC source', () => {
     const result = parseDropSfc('app/components/UserHeader.vue', validSource)
 
     expect(result?.behavior.id).toMatch(/^UserHeader--/)
-    expect(result?.behavior.code).toContain('useDropContext')
-    expect(result?.vueSource).not.toContain('<drop')
+    expect(result?.behavior.code).toContain('ctx.root.classList.add(\'ready\')')
+    expect(result?.vueSource).not.toContain('defineDrop(')
     expect(result?.vueSource).toContain('data-drop-root="UserHeader--')
     expect(result?.vueSource).toContain('const __drop = createDropState(useHead, "UserHeader--')
     expect(result?.vueSource).toContain(':data-drop-state="__drop.serialized"')
   })
 
-  it('rejects multiple Drop blocks', () => {
-    const source = `${validSource}\n<drop>const two = true</drop>`
+  it('rejects multiple defineDrop calls', () => {
+    const source = validSource.replace('</script>', '\ndefineDrop({ state: {} }, (ctx) => {})\n</script>')
 
-    expect(() => parseDropSfc('Bad.vue', source)).toThrow(/only one <drop>/)
+    expect(() => parseDropSfc('Bad.vue', source)).toThrow(/only one defineDrop/)
   })
 
   it('rejects a template fragment', () => {
@@ -42,19 +40,22 @@ describe('parseDropSfc', () => {
     expect(() => parseDropSfc('Bad.vue', source)).toThrow(/one HTML root element/)
   })
 
-  it('rejects Drop imports from Nuxt client modules', () => {
+  it('rejects a callback that captures surrounding SFC declarations', () => {
     const source = validSource.replace(
-      'const { root } = useDropContext()',
-      'import { useNuxtApp } from "#app"',
+      'defineDrop({ state: { user: null } }, (ctx) => {',
+      'const selector = \' .ready\'\ndefineDrop({ state: { user: null } }, (ctx) => {\n  ctx.root.matches(selector)',
     )
 
-    expect(() => parseDropSfc('Bad.vue', source)).toThrow(/cannot import "#app"/)
+    expect(() => parseDropSfc('Bad.vue', source)).toThrow(/cannot capture "selector"/)
   })
 
-  it('rejects defineDropState without a Drop block', () => {
-    const source = validSource.replace(/<drop[\s\S]*?<\/drop>/, '')
+  it('requires ctx.load to receive a string literal', () => {
+    const source = validSource.replace(
+      'ctx.root.classList.add(\'ready\')',
+      'const moduleName = \'lenis\'\n  ctx.load(moduleName)',
+    )
 
-    expect(() => parseDropSfc('Bad.vue', source)).toThrow(/defineDropState requires a <drop>/)
+    expect(() => parseDropSfc('Bad.vue', source)).toThrow(/ctx\.load requires a string-literal module specifier/)
   })
 
   it('derives distinct behavior IDs for same-named components in different paths', () => {
