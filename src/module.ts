@@ -3,17 +3,14 @@ import { dirname, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { addImports, addTypeTemplate, addVitePlugin, createResolver, defineNuxtModule } from '@nuxt/kit'
 
-export interface ModuleOptions {
-  enabled?: boolean
-}
-
-export default defineNuxtModule<ModuleOptions>({
+export default defineNuxtModule({
   meta: {
     name: 'drop',
+    version: '1.0.2',
     configKey: 'drop',
-  },
-  defaults: {
-    enabled: true,
+    compatibility: {
+      nuxt: '^4.5.0',
+    },
   },
   async setup(_options, nuxt) {
     const resolver = createResolver(import.meta.url)

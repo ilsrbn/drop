@@ -19,6 +19,12 @@ export default defineNuxtConfig({
 })
 ```
 
+## Playground
+
+The repository includes a Nuxt playground with the module already configured.
+Run it locally with `npm run dev`, or browse the
+[playground source](https://github.com/ilsrbn/drop/tree/main/playground).
+
 ## Quick start
 
 Declare a behavior in a component's `<script setup>`. The `state` object is

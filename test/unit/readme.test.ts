@@ -32,6 +32,7 @@ describe('README', () => {
       'one native HTML root element',
       '5 kB gzip',
       'npm run test',
+      'playground source',
     ]) {
       expect(readme).toContain(requiredText)
     }
