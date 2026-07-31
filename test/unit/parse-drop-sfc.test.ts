@@ -49,6 +49,15 @@ describe('parseDropSfc', () => {
     expect(() => parseDropSfc('Bad.vue', source)).toThrow(/cannot capture "selector"/)
   })
 
+  it('allows a state property with the same name as its SSR declaration', () => {
+    const source = validSource.replace(
+      'defineDrop({ state: { user: null } }, (ctx) => {',
+      'const imageSources = []\ndefineDrop({ state: { imageSources } }, (ctx) => {\n  ctx.state.imageSources',
+    )
+
+    expect(parseDropSfc('Widget.vue', source)).not.toBeNull()
+  })
+
   it('requires ctx.load to receive a string literal', () => {
     const source = validSource.replace(
       'ctx.root.classList.add(\'ready\')',

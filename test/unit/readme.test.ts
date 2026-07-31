@@ -18,10 +18,18 @@ describe('README', () => {
 
     for (const requiredText of [
       'defineDrop',
+      'ctx.root',
+      'ctx.state',
       'ctx.onCleanup',
       'ctx.signal',
+      'ctx.computed',
+      'ctx.effect',
+      'ctx.load',
       'noScripts',
       'prerender',
+      'JSON-serializable',
+      'string literal',
+      'one native HTML root element',
       '5 kB gzip',
       'npm run test',
     ]) {

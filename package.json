@@ -1,9 +1,28 @@
 {
-  "name": "drop",
+  "name": "@ilsrbn/drop",
   "version": "1.0.0",
   "description": "Opt-in browser behaviors for static Nuxt routes",
-  "repository": "ilsrbn/drop",
+  "keywords": [
+    "nuxt",
+    "nuxt-module",
+    "ssr",
+    "static-site",
+    "progressive-enhancement",
+    "islands"
+  ],
+  "author": "ilsrbn <serbini271@gmail.com>",
+  "homepage": "https://github.com/ilsrbn/drop#readme",
+  "bugs": {
+    "url": "https://github.com/ilsrbn/drop/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ilsrbn/drop.git"
+  },
   "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  },
   "type": "module",
   "exports": {
     ".": {

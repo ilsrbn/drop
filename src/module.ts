@@ -36,7 +36,7 @@ export default defineNuxtModule<ModuleOptions>({
 declare global {
   function defineDrop<TState extends Record<string, unknown>>(
     options: { state: TState },
-    behavior: (ctx: import(${JSON.stringify(resolve(runtimeDir, 'types'))}).DropContext<TState>) => void | (() => void) | Promise<void | (() => void)>,
+    behavior: (ctx: import(${JSON.stringify(resolve(runtimeDir, 'types'))}).DropContext<import('vue').UnwrapRef<TState>>) => void | (() => void) | Promise<void | (() => void)>,
   ): void
 }
 
