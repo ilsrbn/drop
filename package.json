@@ -1,6 +1,6 @@
 {
   "name": "@ilsrbn/drop",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Opt-in browser behaviors for static Nuxt routes",
   "keywords": [
     "nuxt",
