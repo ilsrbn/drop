@@ -2,7 +2,10 @@
   "name": "@ilsrbn/drop",
   "version": "1.0.0",
   "description": "Opt-in browser behaviors for static Nuxt routes",
-  "repository": "ilsrbn/drop",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ilsrbn/drop.git"
+  },
   "license": "MIT",
   "publishConfig": {
     "access": "public"
