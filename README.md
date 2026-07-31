@@ -7,17 +7,17 @@ that use `noScripts`.
 
 ## Installation
 
-\`\`\`bash
+```bash
 npm install @ilsrbn/drop
-\`\`\`
+```
 
 Register the module in `nuxt.config.ts`:
 
-\`\`\`ts
+```ts
 export default defineNuxtConfig({
   modules: ['@ilsrbn/drop'],
 })
-\`\`\`
+```
 
 ## Quick start
 
@@ -25,7 +25,7 @@ Declare a behavior in a component's `<script setup>`. The `state` object is
 evaluated during SSR; the callback runs in the browser after the component root
 is available.
 
-\`\`\`vue
+```vue
 <template>
   <section>
     <button data-toggle type="button">Toggle details</button>
@@ -56,7 +56,7 @@ defineDrop({ state: { initiallyOpen: props.initiallyOpen } }, (ctx) => {
   ctx.onCleanup(() => button.removeEventListener('click', toggle))
 })
 </script>
-\`\`\`
+```
 
 ## API reference
 
@@ -67,11 +67,11 @@ has no runtime return value. Drop removes the macro call from the Vue source,
 serializes `options.state` on the rendered root, and emits `behavior` as
 `/_drop/<behavior-id>.js`.
 
-\`\`\`ts
+```ts
 defineDrop({ state: { open: false } }, (ctx) => {
   // Browser-only behavior.
 })
-\`\`\`
+```
 
 `options` must be an object with a `state` property. The callback must be an
 inline arrow function or function expression with exactly one parameter named
@@ -91,19 +91,19 @@ The callback receives `DropContext<TState>`. `TState` is inferred from
 The component's root `HTMLElement`. Use native DOM APIs to select descendants,
 register listeners, set attributes, and update text or classes.
 
-\`\`\`ts
+```ts
 const input = ctx.root.querySelector<HTMLInputElement>('input[type="search"]')
 ctx.root.classList.add('is-ready')
-\`\`\`
+```
 
 #### `ctx.state`
 
 The typed SSR snapshot of `options.state`. It is initial data, not a
 server-synchronized store.
 
-\`\`\`ts
+```ts
 const endpoint = ctx.state.endpoint
-\`\`\`
+```
 
 #### `ctx.onCleanup(cleanup)`
 
@@ -111,32 +111,32 @@ Registers `cleanup: () => void` for listeners, observers, subscriptions, and
 timers. Cleanups run once when Drop remounts the same behavior, including after
 a development rebuild. Registering a cleanup after disposal runs it immediately.
 
-\`\`\`ts
+```ts
 const observer = new ResizeObserver(() => updateLayout())
 observer.observe(ctx.root)
 ctx.onCleanup(() => observer.disconnect())
-\`\`\`
+```
 
 #### `ctx.signal(value)`
 
 Creates a writable Alien Signals signal. Call it without arguments to read the
 value and with one argument to write it.
 
-\`\`\`ts
+```ts
 const count = ctx.signal(0)
 count() // 0
 count(count() + 1)
-\`\`\`
+```
 
 #### `ctx.computed(getter)`
 
 Creates a derived Alien Signals signal. `getter` receives the previous computed
 value when one exists; call the returned signal without arguments to read it.
 
-\`\`\`ts
+```ts
 const doubled = ctx.computed(() => count() * 2)
 doubled()
-\`\`\`
+```
 
 #### `ctx.effect(fn)`
 
@@ -144,11 +144,11 @@ Runs `fn` immediately and whenever signals read by `fn` change. It returns a
 stop function and Drop registers that function with the cleanup scope, so the
 effect is also stopped automatically.
 
-\`\`\`ts
+```ts
 ctx.effect(() => {
   ctx.root.dataset.count = String(count())
 })
-\`\`\`
+```
 
 #### `ctx.load(specifier)`
 
@@ -156,12 +156,12 @@ Loads a browser module and returns `Promise<TModule>`. The specifier must be a
 string literal. Drop compiles the call to a dynamic `import()`, so the module is
 bundled for this behavior and is not evaluated during SSR.
 
-\`\`\`ts
+```ts
 defineDrop({ state: {} }, async (ctx) => {
   const module = await ctx.load<typeof import('some-widget')>('some-widget')
   module.mount(ctx.root)
 })
-\`\`\`
+```
 
 ## State serialization
 
@@ -201,13 +201,13 @@ properties directly, such as `ctx.signal`; dynamic access such as
 Drop works on ordinary Nuxt routes and is especially useful when Vue's client
 scripts are omitted:
 
-\`\`\`ts
+```ts
 export default defineNuxtConfig({
   routeRules: {
     '/catalog/**': { noScripts: true },
   },
 })
-\`\`\`
+```
 
 `noScripts` controls Nuxt's Vue client bundle. `prerender` controls whether
 Nitro generates HTML ahead of time. They are independent options: a route may
@@ -222,11 +222,10 @@ production `signal + effect` fixture is capped at **2 kB gzip**.
 
 ## Development
 
-\`\`\`bash
+```bash
 npm install
 npm run dev:prepare
 npm run lint
 npm run test
 npm run test:types
-\`\`\`
-
+```

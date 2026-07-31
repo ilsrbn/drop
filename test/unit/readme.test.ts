@@ -36,4 +36,11 @@ describe('README', () => {
       expect(readme).toContain(requiredText)
     }
   })
+
+  it('uses Markdown code fences for examples', async () => {
+    const readme = await readFile(readmePath, 'utf8')
+
+    expect(readme).toContain('```vue')
+    expect(readme).not.toContain('\\`\\`\\`')
+  })
 })
