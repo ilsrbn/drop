@@ -1,5 +1,7 @@
 # Drop
 
+![Drop logo](./logo.png)
+
 Drop adds small, isolated browser behaviors to server-rendered Nuxt markup. Each
 `defineDrop` call becomes an independent browser entry that mounts on its
 component root, so it works particularly well with SSR-first pages and routes

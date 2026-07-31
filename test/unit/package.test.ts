@@ -13,9 +13,16 @@ describe('npm package metadata', () => {
     expect(packageJson.keywords).toEqual(expect.arrayContaining(['nuxt-module', 'ssr']))
     expect(packageJson.homepage).toBe('https://github.com/ilsrbn/drop#readme')
     expect(packageJson.bugs).toEqual({ url: 'https://github.com/ilsrbn/drop/issues' })
+    expect(packageJson.files).toContain('logo.png')
   })
 
   it('ships the declared MIT license text', async () => {
     await expect(readFile(licensePath, 'utf8')).resolves.toContain('MIT License')
+  })
+
+  it('uses the packaged logo in the README', async () => {
+    const readme = await readFile(fileURLToPath(new URL('../../README.md', import.meta.url)), 'utf8')
+
+    expect(readme).toContain('![Drop logo](./logo.png)')
   })
 })

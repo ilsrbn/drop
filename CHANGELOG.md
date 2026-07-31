@@ -1,5 +1,9 @@
 # Changelog
 
+## v1.0.3
+
+- Add the Drop logo to the README and npm package.
+
 ## v1.0.2
 
 - Add Nuxt module version and compatibility metadata.
