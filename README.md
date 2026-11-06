@@ -9,6 +9,8 @@
 
 **Tiny browser behaviors for server-rendered Nuxt pages, without shipping Vue to the client.**
 
+**Live demo:** [nora-tawny-ten.vercel.app](https://nora-tawny-ten.vercel.app) — the page ships 2 Drop entries and no Vue client bundle.
+
 Drop adds small, isolated browser behaviors to server-rendered Nuxt markup. Each
 `defineDrop` call becomes an independent browser entry that mounts on its
 component root, so it works particularly well with SSR-first pages and routes
