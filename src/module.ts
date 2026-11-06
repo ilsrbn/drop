@@ -6,7 +6,7 @@ import { addImports, addTypeTemplate, addVitePlugin, createResolver, defineNuxtM
 export default defineNuxtModule({
   meta: {
     name: 'drop',
-    version: '1.0.2',
+    version: '1.0.4',
     configKey: 'drop',
     compatibility: {
       nuxt: '^4.5.0',

@@ -1,0 +1,19 @@
+# Drop
+
+> Drop (@ilsrbn/drop) is a Nuxt module that adds small, opt-in browser behaviors to server-rendered or static Nuxt routes (including routes using `noScripts`) without hydrating the page with Vue. One `defineDrop({ state }, ctx => ...)` call per component becomes an independent browser entry mounted on the component root. Core runtime is capped at 5 kB gzip. Requires Nuxt ^4.5.0.
+
+## Docs
+
+- [README: install, quick start, full API reference](https://raw.githubusercontent.com/ilsrbn/drop/main/README.md): defineDrop, ctx.root/state/signal/computed/effect/load/onCleanup, state serialization, component contract, build-time errors
+- [AGENTS.md: rules and pitfalls for AI coding agents](https://raw.githubusercontent.com/ilsrbn/drop/main/AGENTS.md): the constraints the compiler enforces, do/don't list
+- [Changelog](https://raw.githubusercontent.com/ilsrbn/drop/main/CHANGELOG.md)
+
+## Examples
+
+- [Playground source](https://github.com/ilsrbn/drop/tree/main/playground): a Nuxt app with a session-aware header and login dialog on a `noScripts` route
+
+## Links
+
+- [npm package](https://www.npmjs.com/package/@ilsrbn/drop)
+- [Nuxt modules directory](https://nuxt.com/modules/drop)
+- [GitHub repository](https://github.com/ilsrbn/drop)

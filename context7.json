@@ -1,0 +1,12 @@
+{
+  "$schema": "https://context7.com/schema/context7.json",
+  "projectTitle": "Drop",
+  "description": "Nuxt module for small opt-in browser behaviors on server-rendered routes via the defineDrop macro, without hydrating the page with Vue.",
+  "folders": ["skills"],
+  "excludeFiles": ["CONTRIBUTING.md"],
+  "rules": [
+    "defineDrop is a compile-time macro; use exactly one top-level call per component with a single native HTML root element.",
+    "Pass server values through options.state (JSON-serializable only); the callback must not capture imports, props or script declarations.",
+    "Inside the callback use ctx.signal, ctx.computed and ctx.effect, not Vue APIs; register cleanup with ctx.onCleanup."
+  ]
+}

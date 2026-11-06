@@ -7,13 +7,59 @@
 [![Nuxt module](https://img.shields.io/badge/Nuxt-Module-00DC82?logo=nuxt)](https://nuxt.com/modules/drop)
 [![license](https://img.shields.io/npm/l/@ilsrbn/drop?color=00DC82)](./LICENSE)
 
-> 📦 Drop is listed on the official Nuxt modules directory:
-> **[nuxt.com/modules/drop](https://nuxt.com/modules/drop)**
+**Tiny browser behaviors for server-rendered Nuxt pages, without shipping Vue to the client.**
+
+**Live demo:** [nora-tawny-ten.vercel.app](https://nora-tawny-ten.vercel.app) — the page ships 2 Drop entries and no Vue client bundle.
 
 Drop adds small, isolated browser behaviors to server-rendered Nuxt markup. Each
 `defineDrop` call becomes an independent browser entry that mounts on its
 component root, so it works particularly well with SSR-first pages and routes
 that use `noScripts`.
+
+Listed in the official Nuxt modules directory:
+[nuxt.com/modules/drop](https://nuxt.com/modules/drop).
+
+## Why Drop
+
+Catalogs, articles and landing pages are mostly static HTML, yet a dialog, a
+toggle or a session-aware header still needs JavaScript. The usual choices are
+to hydrate the whole page with Vue, or to keep behavior in a separate script
+wired up by selectors, away from the markup it controls.
+
+Drop keeps the behavior in the component that owns the markup and ships only
+that behavior:
+
+- **Colocated.** The behavior lives in the component's `<script setup>`.
+- **No page hydration.** Works on routes with `noScripts: true`.
+- **Per-component bundles.** Each `defineDrop` is emitted as its own
+  `/_drop/<behavior-id>.js`.
+- **SSR state handoff.** `state` is evaluated during SSR and serialized on the
+  component root.
+- **Tiny.** The core runtime is capped at 5 kB gzip.
+- **Typed.** `ctx` and `state` are inferred; mistakes fail at build time with
+  clear diagnostics.
+
+### How it works
+
+1. You write `defineDrop({ state }, (ctx) => { ... })` in a component.
+2. At build time the macro call is removed from the Vue source and the callback
+   is compiled into a standalone browser entry.
+3. During SSR the `state` snapshot is serialized onto the component's root
+   element.
+4. In the browser the entry mounts on that root and receives `ctx`.
+
+### When not to use Drop
+
+If a component needs full Vue reactivity, routing, or nested child components,
+use a normal hydrated Vue component. Drop is for small, DOM-level behavior on
+otherwise static markup.
+
+## Use with AI coding agents
+
+The package ships [`AGENTS.md`](./AGENTS.md), [`llms.txt`](./llms.txt) and a
+ready-made agent skill in [`skills/drop`](./skills/drop/SKILL.md). They
+describe the component contract and the build-time rules, so an agent working
+in a project that has Drop installed can write valid behaviors on the first try.
 
 ## Installation
 

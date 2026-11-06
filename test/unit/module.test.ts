@@ -10,7 +10,7 @@ describe('drop module', () => {
     const meta = await module.getMeta()
 
     expect(meta.name).toBe('drop')
-    expect(meta.version).toBe('1.0.2')
+    expect(meta.version).toBe('1.0.4')
     expect(meta.configKey).toBe('drop')
     expect(meta.compatibility).toEqual({ nuxt: '^4.5.0' })
   })

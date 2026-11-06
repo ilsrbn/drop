@@ -1,5 +1,13 @@
 # Changelog
 
+## v1.0.4
+
+- Add `AGENTS.md`, `llms.txt` and a ready-made agent skill (`skills/drop`) to the npm package so AI coding agents can write valid Drop behaviors.
+- Rewrite the README intro, add a "Why Drop" section and an AI-agents section.
+- Expand package keywords and metadata for discoverability.
+- Add GitHub issue templates and `CONTRIBUTING.md`.
+- Fix stale `meta.version` in the module definition.
+
 ## v1.0.3
 
 - Add the Drop logo to the README and npm package.

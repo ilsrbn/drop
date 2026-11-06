@@ -1,0 +1,6 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "framework": null,
+  "installCommand": "npm install --ignore-scripts && npm run dev:prepare",
+  "buildCommand": "NITRO_PRESET=vercel npx nuxt build playground && rm -rf .vercel/output && mkdir -p .vercel && cp -R playground/.vercel/output .vercel/output"
+}

@@ -1,14 +1,20 @@
 {
   "name": "@ilsrbn/drop",
-  "version": "1.0.3",
-  "description": "Opt-in browser behaviors for static Nuxt routes",
+  "version": "1.0.4",
+  "description": "Tiny opt-in browser behaviors for server-rendered Nuxt routes, without hydrating the page",
   "keywords": [
     "nuxt",
     "nuxt-module",
     "ssr",
     "static-site",
     "progressive-enhancement",
-    "islands"
+    "islands",
+    "hydration",
+    "no-hydration",
+    "noscripts",
+    "vue",
+    "defineDrop",
+    "dom"
   ],
   "author": "ilsrbn <serbini271@gmail.com>",
   "homepage": "https://github.com/ilsrbn/drop#readme",
@@ -40,7 +46,10 @@
   },
   "files": [
     "dist",
-    "logo.png"
+    "logo.png",
+    "AGENTS.md",
+    "llms.txt",
+    "skills"
   ],
   "workspaces": [
     "playground"
@@ -55,7 +64,8 @@
     "lint": "eslint .",
     "test": "vitest run",
     "test:watch": "vitest watch",
-    "test:types": "vue-tsc --noEmit -p tsconfig.dev.json && cd playground && vue-tsc --noEmit"
+    "test:types": "vue-tsc --noEmit -p tsconfig.dev.json && cd playground && vue-tsc --noEmit",
+    "docs:build": "node scripts/build-docs.mjs"
   },
   "dependencies": {
     "@babel/parser": "^8.0.4",
@@ -78,6 +88,7 @@
     "changelogen": "^0.6.2",
     "eslint": "^10.7.0",
     "jsdom": "^29.1.1",
+    "marked": "^16.4.2",
     "nuxt": "^4.5.0",
     "typescript": "~6.0.3",
     "vitest": "^4.1.10",
