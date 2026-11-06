@@ -64,7 +64,8 @@
     "lint": "eslint .",
     "test": "vitest run",
     "test:watch": "vitest watch",
-    "test:types": "vue-tsc --noEmit -p tsconfig.dev.json && cd playground && vue-tsc --noEmit"
+    "test:types": "vue-tsc --noEmit -p tsconfig.dev.json && cd playground && vue-tsc --noEmit",
+    "docs:build": "node scripts/build-docs.mjs"
   },
   "dependencies": {
     "@babel/parser": "^8.0.4",
@@ -87,6 +88,7 @@
     "changelogen": "^0.6.2",
     "eslint": "^10.7.0",
     "jsdom": "^29.1.1",
+    "marked": "^16.4.2",
     "nuxt": "^4.5.0",
     "typescript": "~6.0.3",
     "vitest": "^4.1.10",
