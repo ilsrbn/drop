@@ -1,0 +1,26 @@
+name: Bug report
+description: Something in Drop does not work as documented
+labels: [bug]
+body:
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened
+      description: What you expected and what you got. Include the build error text if any.
+    validations:
+      required: true
+  - type: textarea
+    id: repro
+    attributes:
+      label: Minimal component
+      description: The component (template + script setup) that reproduces it.
+      render: vue
+    validations:
+      required: true
+  - type: input
+    id: versions
+    attributes:
+      label: Versions
+      placeholder: "@ilsrbn/drop 1.0.3, nuxt 4.5.0, node 24"
+    validations:
+      required: true
