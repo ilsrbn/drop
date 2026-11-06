@@ -2,6 +2,14 @@
 
 ![Drop logo](./logo.png)
 
+[![npm version](https://img.shields.io/npm/v/@ilsrbn/drop?color=00DC82&label=npm)](https://www.npmjs.com/package/@ilsrbn/drop)
+[![npm downloads](https://img.shields.io/npm/dm/@ilsrbn/drop?color=00DC82)](https://www.npmjs.com/package/@ilsrbn/drop)
+[![Nuxt module](https://img.shields.io/badge/Nuxt-Module-00DC82?logo=nuxt)](https://nuxt.com/modules/drop)
+[![license](https://img.shields.io/npm/l/@ilsrbn/drop?color=00DC82)](./LICENSE)
+
+> 📦 Drop is listed on the official Nuxt modules directory:
+> **[nuxt.com/modules/drop](https://nuxt.com/modules/drop)**
+
 Drop adds small, isolated browser behaviors to server-rendered Nuxt markup. Each
 `defineDrop` call becomes an independent browser entry that mounts on its
 component root, so it works particularly well with SSR-first pages and routes
